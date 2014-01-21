@@ -26,7 +26,8 @@
 #import <Foundation/Foundation.h>
 
 #ifndef REUIKitIsFlatMode
-#define REUIKitIsFlatMode() REFrostedViewControllerUIKitIsFlatMode()
+//#define REUIKitIsFlatMode() REFrostedViewControllerUIKitIsFlatMode()
+#define REUIKitIsFlatMode() (floor(NSFoundationVersionNumber) > 993.0)
 #endif
 
 BOOL REFrostedViewControllerUIKitIsFlatMode();
