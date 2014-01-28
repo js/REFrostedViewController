@@ -74,6 +74,9 @@ typedef NS_ENUM(NSInteger, REFrostedViewControllerLiveBackgroundStyle) {
 - (void)hideMenuViewControllerWithCompletionHandler:(void(^)(void))completionHandler;
 - (void)panGestureRecognized:(UIPanGestureRecognizer *)recognizer;
 
+/// if referenceView is nil, the content view will be used
+- (void)updateBackgroundImageWithReferenceView:(UIView *)referenceView animated:(BOOL)animated;
+
 @end
 
 @protocol REFrostedViewControllerDelegate <NSObject>

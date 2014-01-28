@@ -74,7 +74,6 @@
         if ([toolbar respondsToSelector:@selector(setBarTintColor:)])
             [toolbar performSelector:@selector(setBarTintColor:) withObject:self.frostedViewController.blurTintColor];
         [self.containerView addSubview:toolbar];
-
     } else {
         self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
         [self.containerView addSubview:self.backgroundImageView];
@@ -274,9 +273,18 @@
     }
 }
 
-- (void)refreshBackgroundImage
+- (void)refreshBackgroundImageAnimated:(BOOL)animated
 {
-    self.backgroundImageView.image = self.screenshotImage;
+    if (animated) {
+        [UIView transitionWithView:self.backgroundImageView
+                          duration:0.25
+                           options:(UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionCurveEaseOut)
+                        animations:^{
+                            self.backgroundImageView.image = self.screenshotImage;
+                        } completion:NULL];
+    } else {
+        self.backgroundImageView.image = self.screenshotImage;
+    }
 }
 
 #pragma mark -

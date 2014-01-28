@@ -201,7 +201,7 @@
 {
     if (!self.liveBlur) {
         self.containerViewController.screenshotImage = [[self.contentViewController.view re_screenshot] re_applyBlurWithRadius:self.blurRadius tintColor:self.blurTintColor saturationDeltaFactor:self.blurSaturationDeltaFactor maskImage:nil];
-        [self.containerViewController refreshBackgroundImage];
+        [self.containerViewController refreshBackgroundImageAnimated:NO];
     }
     [self.containerViewController hideWithCompletionHandler:completionHandler];
 }
@@ -210,7 +210,7 @@
 {
     if (!self.liveBlur) {
         self.containerViewController.screenshotImage = [[self.contentViewController.view re_screenshot] re_applyBlurWithRadius:self.blurRadius tintColor:self.blurTintColor saturationDeltaFactor:self.blurSaturationDeltaFactor maskImage:nil];
-        [self.containerViewController refreshBackgroundImage];
+        [self.containerViewController refreshBackgroundImageAnimated:NO];
     }
     [self.containerViewController resizeToSize:size];
 }
@@ -233,6 +233,24 @@
     }
     
     [self.containerViewController panGestureRecognized:recognizer];
+}
+
+- (void)updateBackgroundImageWithReferenceView:(UIView *)referenceView animated:(BOOL)animated {
+    if (referenceView == nil) {
+        referenceView = self.contentViewController.view;
+    }
+
+    UIImage *screenshot = [referenceView re_screenshot];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIImage *blurred =  [screenshot re_applyBlurWithRadius:self.blurRadius
+                                                     tintColor:self.blurTintColor
+                                         saturationDeltaFactor:self.blurSaturationDeltaFactor
+                                                     maskImage:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.containerViewController.screenshotImage = blurred;
+            [self.containerViewController refreshBackgroundImageAnimated:animated];
+        });
+    });
 }
 
 #pragma mark -
