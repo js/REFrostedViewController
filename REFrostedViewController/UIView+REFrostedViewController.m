@@ -25,12 +25,15 @@
 
 #import "UIView+REFrostedViewController.h"
 
+#define USE_DRAW_HIERACHY_IN_RECT 0
+
 @implementation UIView (REFrostedViewController)
 
 - (UIImage *)re_screenshot
 {
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, [UIScreen mainScreen].scale);
-    
+
+#if USE_DRAW_HIERACHY_IN_RECT
     if ([self respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
        
         NSInvocation* invoc = [NSInvocation invocationWithMethodSignature:
@@ -44,12 +47,16 @@
         [invoc setArgument:&arg3 atIndex:3];
         [invoc invoke];
     } else {
+#endif
         [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+#if USE_DRAW_HIERACHY_IN_RECT
     }
-    
+#endif
+
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
+
 
 @end
