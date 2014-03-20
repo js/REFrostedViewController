@@ -30,4 +30,4 @@
 #define REUIKitIsFlatMode() (floor(NSFoundationVersionNumber) > 993.0)
 #endif
 
-BOOL REFrostedViewControllerUIKitIsFlatMode();
+BOOL REFrostedViewControllerUIKitIsFlatMode(void);
