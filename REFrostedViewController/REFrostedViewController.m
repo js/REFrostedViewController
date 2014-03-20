@@ -78,6 +78,7 @@
     _containerViewController = [[REFrostedContainerViewController alloc] init];
     _containerViewController.frostedViewController = self;
     _menuViewSize = CGSizeZero;
+    _liveBlur = REUIKitIsFlatMode();
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:_containerViewController action:@selector(panGestureRecognized:)];
     _automaticSize = YES;
 }
@@ -184,6 +185,13 @@
         self.calculatedMenuViewSize = CGSizeMake(_menuViewSize.width > 0 ? _menuViewSize.width : self.contentViewController.view.frame.size.width,
                                                  _menuViewSize.height > 0 ? _menuViewSize.height : self.contentViewController.view.frame.size.height);
     }
+    
+    if (!self.liveBlur) {
+        if (REUIKitIsFlatMode() && !self.blurTintColor) {
+            self.blurTintColor = [UIColor colorWithWhite:1 alpha:0.75f];
+        }
+        self.containerViewController.screenshotImage = [[self.contentViewController.view re_screenshot] re_applyBlurWithRadius:self.blurRadius tintColor:self.blurTintColor saturationDeltaFactor:self.blurSaturationDeltaFactor maskImage:nil];
+    }
         
     [self re_displayController:self.containerViewController frame:self.contentViewController.view.frame];
     self.visible = YES;
@@ -191,11 +199,19 @@
 
 - (void)hideMenuViewControllerWithCompletionHandler:(void(^)(void))completionHandler
 {
+    if (!self.liveBlur) {
+        self.containerViewController.screenshotImage = [[self.contentViewController.view re_screenshot] re_applyBlurWithRadius:self.blurRadius tintColor:self.blurTintColor saturationDeltaFactor:self.blurSaturationDeltaFactor maskImage:nil];
+        [self.containerViewController refreshBackgroundImageAnimated:NO];
+    }
     [self.containerViewController hideWithCompletionHandler:completionHandler];
 }
 
 - (void)resizeMenuViewControllerToSize:(CGSize)size
 {
+    if (!self.liveBlur) {
+        self.containerViewController.screenshotImage = [[self.contentViewController.view re_screenshot] re_applyBlurWithRadius:self.blurRadius tintColor:self.blurTintColor saturationDeltaFactor:self.blurSaturationDeltaFactor maskImage:nil];
+        [self.containerViewController refreshBackgroundImageAnimated:NO];
+    }
     [self.containerViewController resizeToSize:size];
 }
 
