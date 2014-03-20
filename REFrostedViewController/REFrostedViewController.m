@@ -199,7 +199,7 @@
 
 - (void)hideMenuViewControllerWithCompletionHandler:(void(^)(void))completionHandler
 {
-    if (!self.liveBlur) {
+    if (!self.liveBlur && self.visible) {
         self.containerViewController.screenshotImage = [[self.contentViewController.view re_screenshot] re_applyBlurWithRadius:self.blurRadius tintColor:self.blurTintColor saturationDeltaFactor:self.blurSaturationDeltaFactor maskImage:nil];
         [self.containerViewController refreshBackgroundImageAnimated:NO];
     }
