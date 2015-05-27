@@ -88,6 +88,7 @@
     }
     
     [self.view addGestureRecognizer:self.frostedViewController.panGestureRecognizer];
+    self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 - (void)viewWillAppear:(BOOL)animated
